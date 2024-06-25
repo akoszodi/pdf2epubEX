@@ -1,0 +1,20 @@
+FROM ubuntu:jammy
+
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt -q update && apt -q -y upgrade
+
+# Fixed layout ePub: install pdf2htmlEX and some other packages
+
+RUN apt -q -y install ca-certificates
+RUN apt -q update && apt -q -y install poppler-utils bc zip file libglib2.0-0 libxml2
+
+COPY ./pdf2htmlex_0-0.0.18.8.rc2.master.20.04.20200820-0_amd64.deb /tmp
+RUN dpkg -i /tmp/pdf2htmlex_0-0.0.18.8.rc2.master.20.04.20200820-0_amd64.deb
+RUN rm /tmp/pdf2htmlex_0-0.0.18.8.rc2.master.20.04.20200820-0_amd64.deb
+
+# Bash script
+
+COPY ./pdf2epubEX /bin
+
+RUN mkdir /temp
+WORKDIR /temp
